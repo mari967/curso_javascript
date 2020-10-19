@@ -1,0 +1,8 @@
+*** 1 - Variables **
+JS es débilmente tipado
+El ";" del final es opcional
+Para compilar el código en el navegador, incluir el js en html con la etiqueta <script>
+Se pueden declarar y asignar varias variables en la misma línea
+
+** clase 2 - Strings **
+length no es una función!!
