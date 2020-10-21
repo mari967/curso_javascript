@@ -1,4 +1,5 @@
 //CTRL + SHIFT + R -> Actualizar y borrar la cache
+//seleccionar y CTRL + D -> Agregar cursores donde haya palabras iguales al mismo tiempo
 
 /**Clase 35 - Manejo de errores con callbacks */
 //Nos queddamos sin internet...
