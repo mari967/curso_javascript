@@ -17,7 +17,11 @@
       <div id="verde" class="color verde right" data-color="verde"></div>
       <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
     </div>
+    <!-- Alertas bonitas - sweet alert -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous"></script>
+
     <script>
+      //swal('Holis') Alerta bonita <3
 
         /** 
          * Todos los elementos de html se pueden usar en javascript
@@ -30,19 +34,28 @@
         const violeta = document.getElementById('violeta')
         const verde = document.getElementById('verde')
         const btnEmpezar = document.getElementById('btnEmpezar')
-
+        const ULTIMO_NIVEL = 10
 
         class Juego{
             //En una clase, ningún atributo se declara
             constructor() {
-                this.inicializar()
-                this.generarSecuencia()
-                this.siguienteNivel()
+
+                  this.inicializar()
+                  this.generarSecuencia()
+                  setTimeout(this.siguienteNivel, 1000)
+                
+                //OJO CON EL THIS -> ahora es window, porque setTimeout se delega al navegador
+                
             }
 
             inicializar() {//obitene y oculta el botón empezar
-                btnEmpezar.classList.add('hide') //Agrega la clase hide al botón
-                this.nivel = 7
+                this.elegirColor = this.elegirColor.bind(this)
+                this.siguienteNivel = this.siguienteNivel.bind(this)
+                this.inicializar = this.inicializar.bind(this)
+
+                this.toggleBtnEmpezar()
+                
+                this.nivel = 4
                 this.colores = {
                     //celeste: celeste, -> Es lo mismo 
                     //    si el atributo tiene el mismo nombre que el valor
@@ -51,12 +64,20 @@
                     violeta,
                     verde
                 }
-                this.elegirColor = this.elegirColor.bind(this)
+
+            }
+
+            toggleBtnEmpezar() {
+
+              if(btnEmpezar.classList.contains('hide'))
+                btnEmpezar.classList.remove('hide')
+              else                
+                btnEmpezar.classList.add('hide') //Agrega la clase hide al botón
             }
 
             generarSecuencia() {//Los array empiezan sin atributos índice, por eso llenarlos
                 //Math.random() -> genera númeross entre 0 y 1
-                this.secuencia = new Array(10).fill(0).map(n => Math.floor(Math.random()*4))
+                this.secuencia = new Array(ULTIMO_NIVEL).fill(0).map(n => Math.floor(Math.random()*4))
                 //Un color -> un número
             }
 
@@ -122,6 +143,15 @@
               this.colores.verde.addEventListener('click', this.elegirColor)
             }
 
+
+            eliminarEventosOnClick() {
+              this.colores.celeste.removeEventListener('click', this.elegirColor)
+              this.colores.naranja.removeEventListener('click', this.elegirColor)
+              this.colores.violeta.removeEventListener('click', this.elegirColor)
+              this.colores.verde.removeEventListener('click', this.elegirColor) 
+            }
+
+
             //ev -> nombre por convención
             elegirColor(ev) {
               //Obtenemos el valor del atributo color en el dataset
@@ -131,8 +161,43 @@
 
               //THIS es quien ejecuta la función
 
+              if( numeroColor === this.secuencia[this.subnivel]) {
+                this.subnivel++
+                if (this.subnivel === this.nivel) {
+                  this.nivel++ //Pasa de nivel
+                  this.eliminarEventosOnClick()
+                  
+                  if(this.nivel === ULTIMO_NIVEL + 1) {
+                    this.ganoElJuego()
+                  }
+                  else {
+                    setTimeout(this.siguienteNivel, 1500)
+                    //OJO CON EL THIS! -> Setimeout cede la ejecución al navegador
+
+                  }
+                }
+
+              } else {
+                  this.perdioElJuego()
+              }
             }
-        }
+        
+            ganoElJuego() {
+              //swal devuelve una promesa
+              //OJO CON LAS PROMESAS -> Cambian el THIS
+              swal('Platzi','Felicitaciones! Ganaste el juego', 'succes') //título, subtítulo, ícono
+                    .then(this.inicializar)
+            }
+
+        perdioElJuego() {
+              //OJO CON LAS PROMESAS -> Cambian el THIS
+              swal('Platzi', 'Lo lamentamos, perdiste :\'(', 'error')
+                    .then(() => {
+                      this.eliminarEventosOnClick()
+                      this.inicializar()
+            })
+        }        
+      }
 
         function empezarJuego() {//Se llama  on click
             //alert('Empieza el juego')
