@@ -1,4 +1,4 @@
-/**lase 47 - iferencias entre var, let y const */
+/**Clase 47 - iferencias entre var, let y const */
 
 /**
  * CONST -> El alcance está limitado al área limitada por las llaves y las interiores
@@ -108,6 +108,35 @@
     * 
     * THIS es quien ejecuta la función
     * bind(parámetro) -> No tiene efecto de lado
+    * Bind puede recibir parámetros de la función
+    * 
+    * BIND no ejecuta, retorna a una función con el contexto cambiado
+    * 
+    * Funciones que cambian el contexto (this)
+    * **************************
+    * CALL -> EJECUTA en ese momento
+    *           Se pasan parámetros separados por coma
+    * APPLY ->  Igual que call, pero los parámetros se pasan en un array
+    * ***
+    * THIS cambia siempre que ejecutamos funciones asíncronas
     * 
     */
    
+    function saludar(saludo = 'Hola') {
+        console.log(`${saludo}, mi nombre es ${this.nombre}`)
+    }
+
+    const saludarSacha = saludar.bind(sacha) //Fija el this a sacha
+
+    setTimeout(saludar.bind(sacha, 'hola che'), 1000) //Fijo this y paso los parámetros de la función
+
+
+    /**Clase 54 - ¿Cuándo hhace falta poner el punto y coma? */
+
+    /**
+     * Obligatorio si
+     * ****************
+     * Cuando usamos varias instrucciones en una mísma línea
+     * Al comenzar la próxima línea con un array
+     * Al comenzar la próxima línea con un template string
+     */
